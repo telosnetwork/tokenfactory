@@ -17,6 +17,7 @@
           :readonly="!!editingToken"
           label="Decimals"
         ></q-input>
+        <!-- TODO: limit this to be less than 4611686018427388000 when you remove the decimal place -->
         <q-input
           v-model.number="token.supply"
           type="number"
@@ -32,6 +33,7 @@
             createToken ? `Create for ${this.config.create_price}` : "Save"
           }}</q-btn>
           <q-btn flat @click="cancelEdit">Cancel</q-btn>
+          <!-- TODO: if this is edit mode, we should also have a way to issue and retire tokens -->
         </q-card-actions>
       </q-card-section>
     </q-card>
@@ -105,6 +107,7 @@ export default {
       } 
     },
     async submitCreate() {
+      debugger;
       const actions = [
         {
           account: process.env.TOKENMANAGER_CONTRACT,
