@@ -8,21 +8,26 @@
         <q-input v-model="token.name" label="Token name"></q-input>
         <q-input
           v-model="token.symbol"
+          counter
           :readonly="!!editingToken"
           label="Symbol"
+          @input="val => token.symbol = val.toUpperCase().replace(/[^A-Z]/g, '')"
+          :rules="[ !!val || '* Required', val => val.length <= 6 || 'Symbols can only be 6 characters']"
         ></q-input>
         <q-input
           v-model.number="token.decimals"
           type="number"
           :readonly="!!editingToken"
           label="Decimals"
+          :rules="[ !!val || '* Required', val => val && (val <= 9) || 'Can only have up to 9 decimals of precision']"
         ></q-input>
-        <!-- TODO: limit this to be less than 4611686018427388000 when you remove the decimal place -->
         <q-input
           v-model.number="token.supply"
           type="number"
-          v-if="createToken"
+          v-if="createToken && token.decimals"
           label="Max supply"
+          @input="val => token.decimals && (token.supply = parseFloat(val.toFixed(token.decimals)))"
+          :rules="[ !!val || '* Required', val => parseInt(val.toFixed(token.decimals).replace(/\./g, '')) < 4611686018427388000 || '* supply (without decimals) must be less than 4611686018427388000' ]"
         ></q-input>
         <q-input v-model="token.logo_sm" label="Small logo URL"></q-input>
         <q-input v-model="token.logo_lg" label="Large logo URL"></q-input>
